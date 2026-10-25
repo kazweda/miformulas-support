@@ -2,7 +2,8 @@
 """Validate privacy policy version metadata.
 
 Checks that each policy file's front matter `version`/`lastUpdated`
-match the top row of its "9. Policy Version History" table, and that
+match the top row of its "Policy Version History" table (the numbered
+section titled ポリシーのバージョン履歴 / Policy Version History), and that
 the Japanese and English policies agree on the current version.
 """
 
@@ -16,7 +17,7 @@ JA_PATH = Path("PRIVACY_POLICY.md")
 EN_PATH = Path("PRIVACY_POLICY_EN.md")
 
 HISTORY_TOP_ROW_RE = re.compile(
-    r"^## 9\..*?\n\n\|.*\|\n\|[-| ]+\|\n\| *([^|]+?) *\| *([^|]+?) *\|",
+    r"^## \d+\. (?:ポリシーのバージョン履歴|Policy Version History)\n\n\|.*\|\n\|[-| ]+\|\n\| *([^|]+?) *\| *([^|]+?) *\|",
     re.MULTILINE | re.DOTALL,
 )
 
@@ -39,7 +40,7 @@ def parse_front_matter(text: str) -> dict[str, str]:
 def top_history_row(text: str) -> tuple[str, str]:
     match = HISTORY_TOP_ROW_RE.search(text)
     if not match:
-        raise ValueError("could not find the '9. Version History' table")
+        raise ValueError("could not find the 'Policy Version History' table")
     return match.group(1).strip(), match.group(2).strip()
 
 
